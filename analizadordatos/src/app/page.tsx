@@ -1,13 +1,11 @@
 // src/app/page.tsx
 
-import Dashboard from '@/app/dashboard/page';
+import LoginPage from './login';
 
-// Este componente sirve como la página principal de tu aplicación (ruta '/')
-// Simplemente renderiza tu componente Dashboard.
-export default function HomePage() {
+// Esta es la página raíz de tu aplicación.
+// La configuramos para que sea la página de Login.
+export default function Home() {
   return (
-    <main>
-      <Dashboard />
-    </main>
+    <LoginPage />
   );
 }

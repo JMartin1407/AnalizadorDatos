@@ -1,28 +1,23 @@
 // src/components/UploadExcel.tsx
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios'; 
-import { Alumno, BackendMetrics, Correlaciones, GrupoEstadistica } from "@/lib/analytics"; 
+import { Alumno, BackendMetrics, Correlaciones, GrupoEstadistica, UserRole } from "@/lib/analytics"; 
+// NOTA: Se asumen las interfaces AnalysisResult y UploadExcelProps
 
-// Definición de la respuesta de FastAPI para la tipificación local
-interface AnalysisResult {
-    message: string;
-    promedio_general: number;
-    area_de_progreso_grupo: number; 
-    correlaciones: Correlaciones;
-    estadistica_grupal: GrupoEstadistica;
-    data_preview: Alumno[];
-}
-
-interface UploadExcelProps {
-    onAnalysisComplete: (data: Alumno[], metrics: BackendMetrics) => void;
-}
-
-const UploadExcel: React.FC<UploadExcelProps> = ({ onAnalysisComplete }) => {
+const UploadExcel: React.FC<any> = ({ onAnalysisComplete }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [file, setFile] = useState<File | null>(null);
+    const [userRole, setUserRole] = useState<UserRole | null>(null);
+
+    // 1. Hook para obtener el rol del usuario (para la visibilidad)
+    useEffect(() => {
+        const role = localStorage.getItem('userRole') as UserRole | null;
+        setUserRole(role);
+    }, []);
+
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFile(e.target.files?.[0] || null);
@@ -35,20 +30,31 @@ const UploadExcel: React.FC<UploadExcelProps> = ({ onAnalysisComplete }) => {
             return;
         }
 
+        // 2. OBTENCIÓN Y VERIFICACIÓN CRÍTICA DEL TOKEN (CORRECCIÓN)
+        const authToken = localStorage.getItem('authToken');
+        
+        if (userRole !== 'Admin' || !authToken) {
+            setError("Acceso denegado (403). Solo los Administradores pueden subir archivos.");
+            return;
+        }
+
         setLoading(true);
         setError(null);
-
         const formData = new FormData();
         formData.append('file', file);
 
         try {
-            const response = await axios.post<AnalysisResult>(
-                'http://localhost:8000/upload-and-analyze/',
+            // 3. Enviar la petición al endpoint PROTEGIDO de ADMIN
+            const response = await axios.post<any>(
+                'http://localhost:8000/admin/upload-and-analyze/',
                 formData,
-                { headers: { 'Content-Type': 'multipart/form-data' } }
+                { headers: { 
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${authToken}` // ENVIANDO EL TOKEN
+                }}
             );
 
-            // Extraemos los datos del Backend para pasarlos al Dashboard
+            // [Lógica de procesamiento de respuesta, asumida correcta]
             const metrics: BackendMetrics = {
                 area_de_progreso_grupo: response.data.area_de_progreso_grupo,
                 promedio_general: response.data.promedio_general,
@@ -58,15 +64,17 @@ const UploadExcel: React.FC<UploadExcelProps> = ({ onAnalysisComplete }) => {
 
             onAnalysisComplete(response.data.data_preview, metrics);
 
-        } catch (err) {
+        } catch (err: any) {
+            // El backend devuelve 403 (Permiso) o 401 (Token)
             let errorMessage: string;
             
             if (axios.isAxiosError(err)) { 
-                errorMessage = err.response?.data?.detail 
-                    ? err.response.data.detail
-                    : "Error de red o en el servidor. Asegúrate de que FastAPI esté corriendo en http://localhost:8000.";
-            } else if (err instanceof Error) {
-                errorMessage = err.message;
+                const status = err.response?.status;
+                if (status === 401 || status === 403) {
+                     errorMessage = `Error de Permiso (${status}). Por favor, vuelva a iniciar sesión.`;
+                } else {
+                     errorMessage = err.response?.data?.detail || "Fallo de comunicación con el servidor.";
+                }
             } else {
                 errorMessage = "Error desconocido al subir el archivo.";
             }
@@ -77,21 +85,25 @@ const UploadExcel: React.FC<UploadExcelProps> = ({ onAnalysisComplete }) => {
         }
     };
 
+    const canUpload = userRole === 'Admin';
+    
     return (
         <div className="flex flex-col items-center justify-center space-y-2 p-4 bg-white rounded-2xl shadow">
             <p className="text-gray-600 text-sm">
-                Sube un archivo Excel (.xlsx/.xls) para análisis con 27 métricas.
+                {canUpload ? "Sube el archivo de datos para análisis (Rol: ADMIN)." : "Acceso de carga denegado. Solo ADMIN."}
             </p>
             <input
                 type="file"
                 accept=".xlsx, .xls"
                 onChange={handleFileChange}
                 className="cursor-pointer p-2 border rounded-md"
+                disabled={!canUpload} 
             />
             <button 
                 onClick={handleUpload} 
-                disabled={!file || loading}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out"
+                disabled={loading || !file || !canUpload}
+                className={`w-full px-4 py-2 text-white rounded-lg transition 
+                            ${canUpload ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'}`}
             >
                 {loading ? 'Procesando...' : 'Analizar Datos Multi-Materia'}
             </button>

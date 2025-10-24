@@ -10,10 +10,20 @@ interface DataTableProps {
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
     const router = useRouter();
+    
+    // Obtener el rol del usuario logueado para determinar la ruta de destino
+    // src/components/DataTable.tsx (Fragmento de handleRowClick)
+
+    const userRole = localStorage.getItem('userRole'); 
 
     const handleRowClick = (alumno: Alumno) => {
-        // Navega a la ruta dinámica: /dashboard/alumno/[id]
-        router.push(`/dashboard/alumno/${alumno.id}`); 
+        // La redirección DEBE apuntar a las carpetas existentes:
+        if (userRole === 'Admin') {
+            router.push(`/dashboard/admin/${alumno.id}`); // Debe existir la carpeta admin/[id]
+        } else if (userRole === 'Docente') {
+            router.push(`/dashboard/docente/${alumno.id}`); // Debe existir la carpeta docente/[id]
+        }
+        // Nota: Los otros roles (Padre/Alumno) son redirigidos desde page.tsx
     };
 
     return (

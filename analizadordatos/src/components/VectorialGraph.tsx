@@ -1,5 +1,6 @@
 // src/components/VectorialGraph.tsx
-'use client';
+// NOTA: No usamos 'use client' aquí, ya que el archivo DynamicVectorialGraph
+// se encarga de cargarlo solo en el cliente. Si lo pones, puedes generar conflictos.
 
 import React from 'react';
 import Plot from 'react-plotly.js';
@@ -43,6 +44,7 @@ const VectorialGraph: React.FC<VectorialGraphProps> = ({ data, std_promedio }) =
         hoverinfo: 'text',
     };
 
+    // --- 2. Definición del Punto Ideal (Vector Ideal) ---
     const ideal_trace = {
         x: [100],
         y: [100],
@@ -65,17 +67,17 @@ const VectorialGraph: React.FC<VectorialGraphProps> = ({ data, std_promedio }) =
         height: 700,
         scene: {
             xaxis: {
-                title: { text: 'Promedio Calificación (P)' }, // <--- CORRECCIÓN CLAVE
+                title: { text: 'Promedio Calificación (P)' },
                 range: [50, 100],
                 backgroundcolor: "rgba(0, 0, 0, 0)",
             },
             yaxis: {
-                title: { text: 'Promedio Asistencia (A)' }, // <--- CORRECCIÓN CLAVE
+                title: { text: 'Promedio Asistencia (A)' },
                 range: [50, 100],
                 backgroundcolor: "rgba(0, 0, 0, 0)",
             },
             zaxis: {
-                title: { text: 'Promedio Conducta (C)' }, // <--- CORRECCIÓN CLAVE
+                title: { text: 'Promedio Conducta (C)' },
                 range: [50, 100],
                 backgroundcolor: "rgba(0, 0, 0, 0)",
             },
@@ -93,9 +95,8 @@ const VectorialGraph: React.FC<VectorialGraphProps> = ({ data, std_promedio }) =
     return (
         <div className="flex justify-center w-full">
             <Plot
-                // Usamos la afirmación de tipo para evitar conflictos de sobrecarga
                 data={[student_traces, ideal_trace] as Plotly.Data[]}
-                layout={layout as Partial<Plotly.Layout>} // <--- Afirmación adicional para Layout
+                layout={layout as Partial<Plotly.Layout>} 
                 config={{ responsive: true }}
             />
         </div>
