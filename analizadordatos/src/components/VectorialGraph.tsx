@@ -1,6 +1,5 @@
 // src/components/VectorialGraph.tsx
-// NOTA: No usamos 'use client' aquí, ya que el archivo DynamicVectorialGraph
-// se encarga de cargarlo solo en el cliente. Si lo pones, puedes generar conflictos.
+
 
 import React from 'react';
 import Plot from 'react-plotly.js';
@@ -18,7 +17,7 @@ const VectorialGraph: React.FC<VectorialGraphProps> = ({ data, std_promedio }) =
         return <div className="p-4 text-center text-gray-500">No hay datos disponibles para el gráfico vectorial.</div>;
     }
 
-    // --- 1. Definición de Datos (Puntos de Alumnos) ---
+ 
     const student_traces = {
         x: data.map(a => a.promedio_gral_calificacion),
         y: data.map(a => a.promedio_gral_asistencia),
@@ -44,7 +43,7 @@ const VectorialGraph: React.FC<VectorialGraphProps> = ({ data, std_promedio }) =
         hoverinfo: 'text',
     };
 
-    // --- 2. Definición del Punto Ideal (Vector Ideal) ---
+
     const ideal_trace = {
         x: [100],
         y: [100],
@@ -61,7 +60,6 @@ const VectorialGraph: React.FC<VectorialGraphProps> = ({ data, std_promedio }) =
         hoverinfo: 'text',
     };
 
-    // --- 3. Definición del Layout (CORREGIDO: Títulos de Ejes como objetos {text: string}) ---
     const layout = {
         width: 800,
         height: 700,

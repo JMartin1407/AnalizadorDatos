@@ -33,7 +33,7 @@ const Dashboard = () => {
     const [userRole, setUserRole] = useState<UserRole | null>(null);
     const [userName, setUserName] = useState('');
 
-    // --- Control de Roles y Redirección de Bloqueo ---
+
     useEffect(() => {
         const role = localStorage.getItem('userRole') as UserRole | null;
         const name = localStorage.getItem('userName') || 'Usuario';
@@ -47,7 +47,7 @@ const Dashboard = () => {
         setUserRole(role);
         setUserName(name);
 
-        // REGLA CRÍTICA DE REDIRECCIÓN ESTRICTA: Alumno y Padre NO ven esta vista
+      
         if (role !== 'Admin' && role !== 'Docente') {
             router.push(`/dashboard/${role.toLowerCase()}/${token}`);
             return;
@@ -66,13 +66,11 @@ const Dashboard = () => {
         return <div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="text-xl text-blue-600">Verificando permisos...</div></div>;
     }
 
-    // --- Lógica de Renderizado y Segregación ---
-    
-    // Usamos el dato directo del backend para evitar errores de tipado de frontend
+  
     const promedioGral = backendMetrics.promedio_general; 
     const tendencia = promedioGral > 85 ? "📈 Tendencia positiva" : (promedioGral < 75 ? "📉 Tendencia negativa" : "➡️ Tendencia estable");
 
-    // REGLAS ESTRICTAS DE SEGREGACIÓN:
+ 
     const canUpload = userRole === 'Admin'; 
     const isDocente = userRole === 'Docente';
     const isAdministrativo = userRole === 'Admin';
@@ -88,28 +86,28 @@ const Dashboard = () => {
         datasets: [{
                 label: "Promedio General",
                 data: data.map((d) => d.promedio_gral_calificacion),
-                borderColor: "rgba(37, 99, 235, 1)", // Azul más profesional
+                borderColor: "rgba(37, 99, 235, 1)", 
                 backgroundColor: "rgba(37, 99, 235, 0.1)",
                 borderWidth: 2, fill: true,
         }],
     };
 
     return (
-        // Contenedor principal con fondo ligero
+       
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="max-w-7xl mx-auto space-y-8">
                 
-                {/* Encabezado y Logout */}
+               
                 <header className="flex justify-between items-center bg-white p-6 rounded-xl shadow-md border-b-4 border-blue-600">
                     <h1 className="text-3xl font-extrabold text-blue-700">
                         Dashboard de Gestión Académica 
                         <span className="text-gray-500 text-base ml-3 font-medium">({userName} - {userRole})</span>
                     </h1>
-                    {/* Logout Button */}
+                   
                     <LogoutButton /> 
                 </header>
 
-                {/* Componente de Carga (SOLO VISIBLE PARA ADMIN) */}
+                
                 <div className="bg-white p-6 rounded-xl shadow-md">
                     {canUpload && <UploadExcel onAnalysisComplete={handleDataLoaded} />}
                     {!canUpload && <p className="text-center text-sm text-orange-500 font-medium">Acceso de ingesta de datos limitado a Administradores.</p>}
@@ -118,16 +116,16 @@ const Dashboard = () => {
 
                 {data.length > 0 && (
                     <>
-                        {/* Indicadores rápidos y Estadística Avanzada */}
+                        
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-6"> 
-                            {/* MÉTRICAS CLAVE (VISIBLES PARA AMBOS) */}
+                            
                             <MetricCard titulo="Promedio Gral" valor={promedioGral.toFixed(2)} /> 
                             <MetricCard titulo="Correlación Asistencia" valor={backendMetrics.correlaciones.asistencia_vs_calificacion.toFixed(2)} />
                             
-                            {/* MÉTRICAS DE INTERVENCIÓN (Docente) */}
+                            
                             {isDocente && <MetricCard titulo="Correlación Conducta" valor={backendMetrics.correlaciones.conducta_vs_calificacion.toFixed(2)} />}
 
-                            {/* MÉTRICAS DE SISTEMA (SOLO ADMIN) */}
+                            
                             {isAdministrativo && <MetricCard titulo="Área de Progreso Grupal" valor={backendMetrics.area_de_progreso_grupo.toFixed(2)} />}
                             
                             {/* ESTADÍSTICA GRUPAL (Visibles para ambos) */}

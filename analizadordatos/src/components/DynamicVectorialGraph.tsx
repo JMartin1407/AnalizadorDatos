@@ -2,7 +2,7 @@
 import dynamic from 'next/dynamic';
 import { Alumno } from '@/lib/analytics';
 
-// Importa el componente VectorialGraph forzando SSR a ser falso
+
 const DynamicPlot = dynamic(() => import('./VectorialGraph'), {
     ssr: false, // ¡LA CLAVE! Desactiva el renderizado del lado del servidor
     loading: () => <p className="text-center text-gray-500 p-8">Cargando gráfico vectorial...</p>,

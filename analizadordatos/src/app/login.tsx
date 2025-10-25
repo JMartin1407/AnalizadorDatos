@@ -24,16 +24,15 @@ const LoginPage: React.FC = () => {
             localStorage.setItem('userRole', rol);
             localStorage.setItem('userName', nombre); 
             
-            // --- CORRECCIÓN CRÍTICA DE REDIRECCIÓN ---
-            const SIMULATED_ALUMNO_ID = 1; // Usamos 1 como ID fijo para simplificar la prueba
+            const SIMULATED_ALUMNO_ID = 1; 
 
             if (rol === 'Admin' || rol === 'Docente') {
                 router.push('/dashboard');
             } else if (rol === 'Alumno') {
-                // Redirige al alumno a su vista con un ID numérico (ej: /alumno/1)
+
                 router.push(`/dashboard/alumno/${SIMULATED_ALUMNO_ID}`); 
             } else if (rol === 'Padre') {
-                // Redirige al padre a su vista con un ID numérico (ej: /padre/1)
+
                 router.push(`/dashboard/padre/${SIMULATED_ALUMNO_ID}`); 
             }
 

@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
-        {/* Aquí puedes agregar headers, footers, o providers */}
+        {}
         {children}
       </body>
     </html>

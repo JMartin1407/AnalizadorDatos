@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'; 
 import { Alumno, BackendMetrics, Correlaciones, GrupoEstadistica, UserRole } from "@/lib/analytics"; 
-// NOTA: Se asumen las interfaces AnalysisResult y UploadExcelProps
+
 
 const UploadExcel: React.FC<any> = ({ onAnalysisComplete }) => {
     const [loading, setLoading] = useState(false);
@@ -12,7 +12,7 @@ const UploadExcel: React.FC<any> = ({ onAnalysisComplete }) => {
     const [file, setFile] = useState<File | null>(null);
     const [userRole, setUserRole] = useState<UserRole | null>(null);
 
-    // 1. Hook para obtener el rol del usuario (para la visibilidad)
+
     useEffect(() => {
         const role = localStorage.getItem('userRole') as UserRole | null;
         setUserRole(role);
@@ -30,7 +30,6 @@ const UploadExcel: React.FC<any> = ({ onAnalysisComplete }) => {
             return;
         }
 
-        // 2. OBTENCIÓN Y VERIFICACIÓN CRÍTICA DEL TOKEN (CORRECCIÓN)
         const authToken = localStorage.getItem('authToken');
         
         if (userRole !== 'Admin' || !authToken) {
@@ -44,17 +43,17 @@ const UploadExcel: React.FC<any> = ({ onAnalysisComplete }) => {
         formData.append('file', file);
 
         try {
-            // 3. Enviar la petición al endpoint PROTEGIDO de ADMIN
+ 
             const response = await axios.post<any>(
                 'http://localhost:8000/admin/upload-and-analyze/',
                 formData,
                 { headers: { 
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${authToken}` // ENVIANDO EL TOKEN
+                    'Authorization': `Bearer ${authToken}` 
                 }}
             );
 
-            // [Lógica de procesamiento de respuesta, asumida correcta]
+
             const metrics: BackendMetrics = {
                 area_de_progreso_grupo: response.data.area_de_progreso_grupo,
                 promedio_general: response.data.promedio_general,
@@ -65,7 +64,6 @@ const UploadExcel: React.FC<any> = ({ onAnalysisComplete }) => {
             onAnalysisComplete(response.data.data_preview, metrics);
 
         } catch (err: any) {
-            // El backend devuelve 403 (Permiso) o 401 (Token)
             let errorMessage: string;
             
             if (axios.isAxiosError(err)) { 

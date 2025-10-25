@@ -7,12 +7,11 @@ const LogoutButton: React.FC = () => {
     const router = useRouter();
 
     const handleLogout = () => {
-        // Eliminar credenciales de localStorage
+    
         localStorage.removeItem('authToken');
         localStorage.removeItem('userRole');
         localStorage.removeItem('userName');
         
-        // Redirigir al login
         router.push('/');
     };
 
