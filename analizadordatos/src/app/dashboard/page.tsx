@@ -8,6 +8,7 @@ import {
     LineElement, Title, Tooltip, Legend,
 } from "chart.js";
 import { useRouter } from 'next/navigation';
+import { colorPalette } from "@/lib/theme";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -15,7 +16,7 @@ import DataTable from "@/components/DataTable";
 import MetricCard from "@/components/MetricCard";
 import UploadExcel from "@/components/UploadExcel";
 import DynamicVectorialGraph from '@/components/DynamicVectorialGraph'; 
-import LogoutButton from '@/components/LogoutButton'; // Asumiendo que has importado el LogoutButton
+import LogoutButton from '@/components/LogoutButton';
 import {
     Alumno, BackendMetrics, UserRole
 } from "@/lib/analytics"; 
@@ -33,7 +34,6 @@ const Dashboard = () => {
     const [userRole, setUserRole] = useState<UserRole | null>(null);
     const [userName, setUserName] = useState('');
 
-
     useEffect(() => {
         const role = localStorage.getItem('userRole') as UserRole | null;
         const name = localStorage.getItem('userName') || 'Usuario';
@@ -47,13 +47,11 @@ const Dashboard = () => {
         setUserRole(role);
         setUserName(name);
 
-      
         if (role !== 'Admin' && role !== 'Docente') {
             router.push(`/dashboard/${role.toLowerCase()}/${token}`);
             return;
         }
         
-        // Persistencia de datos
         const storedData = localStorage.getItem('analisisData');
         if (storedData) {
             try {
@@ -63,14 +61,12 @@ const Dashboard = () => {
     }, [router]);
     
     if (!userRole || (userRole !== 'Admin' && userRole !== 'Docente')) {
-        return <div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="text-xl text-blue-600">Verificando permisos...</div></div>;
+        return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}><div className="text-xl text-blue-600">Verificando permisos...</div></div>;
     }
 
-  
     const promedioGral = backendMetrics.promedio_general; 
     const tendencia = promedioGral > 85 ? "📈 Tendencia positiva" : (promedioGral < 75 ? "📉 Tendencia negativa" : "➡️ Tendencia estable");
 
- 
     const canUpload = userRole === 'Admin'; 
     const isDocente = userRole === 'Docente';
     const isAdministrativo = userRole === 'Admin';
@@ -86,78 +82,140 @@ const Dashboard = () => {
         datasets: [{
                 label: "Promedio General",
                 data: data.map((d) => d.promedio_gral_calificacion),
-                borderColor: "rgba(37, 99, 235, 1)", 
-                backgroundColor: "rgba(37, 99, 235, 0.1)",
-                borderWidth: 2, fill: true,
+                borderColor: colorPalette.primary1,
+                backgroundColor: colorPalette.primary3 + "20",
+                borderWidth: 2, 
+                fill: true,
+                tension: 0.3
         }],
     };
 
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom' as const,
+                labels: {
+                    font: { size: 12 },
+                    color: colorPalette.primary4
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: { color: colorPalette.primary4 },
+                grid: { color: 'rgba(0,0,0,0.05)' }
+            },
+            x: {
+                ticks: { color: colorPalette.primary4, font: { size: 10 } },
+                grid: { display: false }
+            }
+        }
+    };
+
     return (
-       
-        <div className="min-h-screen bg-gray-100 p-8">
-            <div className="max-w-7xl mx-auto space-y-8">
+        <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '32px' }}>
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="space-y-8">
                 
-               
-                <header className="flex justify-between items-center bg-white p-6 rounded-xl shadow-md border-b-4 border-blue-600">
-                    <h1 className="text-3xl font-extrabold text-blue-700">
+                <header style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    backgroundColor: '#ffffff',
+                    padding: '24px',
+                    borderRadius: '12px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    borderBottom: `4px solid ${colorPalette.primary1}`
+                }}>
+                    <h1 style={{
+                        fontSize: '28px',
+                        fontWeight: '700',
+                        color: colorPalette.primary1,
+                        margin: 0
+                    }}>
                         Dashboard de Gestión Académica 
-                        <span className="text-gray-500 text-base ml-3 font-medium">({userName} - {userRole})</span>
+                        <span style={{color: colorPalette.primary4, fontSize: '14px', marginLeft: '12px', fontWeight: '500'}}>({userName} - {userRole})</span>
                     </h1>
-                   
                     <LogoutButton /> 
                 </header>
 
-                
-                <div className="bg-white p-6 rounded-xl shadow-md">
+                <div style={{
+                    backgroundColor: '#ffffff',
+                    padding: '24px',
+                    borderRadius: '12px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                }}>
                     {canUpload && <UploadExcel onAnalysisComplete={handleDataLoaded} />}
-                    {!canUpload && <p className="text-center text-sm text-orange-500 font-medium">Acceso de ingesta de datos limitado a Administradores.</p>}
+                    {!canUpload && <p style={{ textAlign: 'center', fontSize: '14px', color: '#f59e0b', fontWeight: '500' }}>Acceso de ingesta de datos limitado a Administradores.</p>}
                 </div>
-
 
                 {data.length > 0 && (
                     <>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-6"> 
-                            
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}> 
                             <MetricCard titulo="Promedio Gral" valor={promedioGral.toFixed(2)} /> 
                             <MetricCard titulo="Correlación Asistencia" valor={backendMetrics.correlaciones.asistencia_vs_calificacion.toFixed(2)} />
                             
-                            
                             {isDocente && <MetricCard titulo="Correlación Conducta" valor={backendMetrics.correlaciones.conducta_vs_calificacion.toFixed(2)} />}
 
-                            
                             {isAdministrativo && <MetricCard titulo="Área de Progreso Grupal" valor={backendMetrics.area_de_progreso_grupo.toFixed(2)} />}
                             
-                            {/* ESTADÍSTICA GRUPAL (Visibles para ambos) */}
                             <MetricCard titulo="Desv. Est. Promedio" valor={backendMetrics.estadistica_grupal.std_promedio.toFixed(2)} />
                             <MetricCard titulo="Total Alumnos" valor={data.length.toString()} />
                         </div>
 
-                        {/* Tendencia */}
-                        <div className="bg-white text-blue-700 p-4 rounded-xl shadow border-l-4 border-blue-400 font-semibold text-center">
+                        <div style={{
+                            backgroundColor: '#ffffff',
+                            color: colorPalette.primary1,
+                            padding: '16px',
+                            borderRadius: '12px',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                            borderLeft: `4px solid ${colorPalette.primary1}`,
+                            fontWeight: '600',
+                            textAlign: 'center'
+                        }}>
                             {tendencia}
                         </div>
 
-                        {/* Contenedor de Gráficos */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', maxWidth: '100%' }}>
                             
-                            {/* Gráfico 3D Vectorial */}
-                            <div className="bg-white p-6 rounded-xl shadow-md lg:col-span-1">
-                                <h2 className="text-xl font-semibold mb-3 text-gray-700">Análisis Vectorial 3D</h2>
-                                <DynamicVectorialGraph data={data} std_promedio={backendMetrics.estadistica_grupal.std_promedio} />
+                            <div style={{
+                                backgroundColor: '#ffffff',
+                                padding: '24px',
+                                borderRadius: '12px',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                maxHeight: '550px',
+                                overflow: 'auto'
+                            }}>
+                                <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: colorPalette.primary4 }}>Análisis Vectorial 3D</h2>
+                                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
+                                    <DynamicVectorialGraph data={data} std_promedio={backendMetrics.estadistica_grupal.std_promedio} />
+                                </div>
                             </div>
                             
-                            {/* Gráfico 2D */}
-                            <div className="bg-white p-6 rounded-xl shadow-md lg:col-span-1 flex flex-col justify-between">
-                                <h2 className="text-xl font-semibold mb-3 text-gray-700">Progreso de Grupo</h2>
-                                <div className="flex-grow flex items-center justify-center">
-                                    <Line data={chartData} />
+                            <div style={{
+                                backgroundColor: '#ffffff',
+                                padding: '24px',
+                                borderRadius: '12px',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                maxHeight: '550px'
+                            }}>
+                                <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: colorPalette.primary4 }}>Progreso de Grupo</h2>
+                                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minHeight: '350px' }}>
+                                    <Line data={chartData} options={chartOptions} />
                                 </div>
                             </div>
                         </div>
 
-                        {/* Tabla Principal para Navegación */}
-                        <h2 className="text-2xl font-bold text-gray-700 mt-4">Alumnos para Intervención ({isDocente ? 'Filtro Pedagógico' : 'Filtro Admin'})</h2>
+                        <h2 style={{ fontSize: '24px', fontWeight: '700', color: colorPalette.primary4, marginTop: '16px' }}>Alumnos para Intervención ({isDocente ? 'Filtro Pedagógico' : 'Filtro Admin'})</h2>
                         <DataTable data={data} />
                     </>
                 )}

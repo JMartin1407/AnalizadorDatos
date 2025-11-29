@@ -7,6 +7,9 @@ import MetricCard from '@/components/MetricCard';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
 import { useRouter } from 'next/navigation';
+import LogoutButton from '@/components/LogoutButton';
+import { Button, Box } from '@mui/material';
+import { School, People, PersonOutline, SecurityOutlined } from '@mui/icons-material';
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
@@ -47,6 +50,11 @@ const useStudentData = (id: string | number): { alumno: Alumno | undefined, isLo
         if (!allData || allData.length === 0) return undefined;
         const targetId = parseInt(String(id)); 
         
+        // Admin puede ver cualquier alumno por ID
+        if (userRole === 'Admin') {
+            return allData.find(a => a.id === targetId);
+        }
+        
         // El Padre/Tutor solo ve su propia información (filtrado por token/ID)
         if (userRole === 'Padre') {
             const token = localStorage.getItem('authToken');
@@ -56,7 +64,7 @@ const useStudentData = (id: string | number): { alumno: Alumno | undefined, isLo
             }
         }
         
-        return undefined; // Bloqueo si no es el Padre/Tutor dueño de la sesión
+        return undefined;
     }, [id, allData, userRole]);
 
     return { alumno, isLoading, userRole };
@@ -70,13 +78,14 @@ const ParentDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
     
     if (isLoading) return <div className="p-8 text-center text-blue-500 text-xl">Cargando Plan de Apoyo Familiar...</div>;
     
-    // Bloqueo estricto: Solo Padre puede ver esta ruta
-    if (!userRole || userRole !== 'Padre') {
+    // Acceso permitido para Padre y Admin
+    const canAccess = userRole === 'Padre' || userRole === 'Admin';
+    if (!canAccess) {
          return (
             <div className="p-8 text-center text-red-700">
                 <h2 className="text-2xl font-bold mb-3">⚠️ Acceso Denegado</h2>
-                <p>Esta ruta es exclusiva para Padres, Tutores y Personal Autorizado.</p>
-                <button onClick={() => router.push('/')} className="mt-4 text-blue-600 underline font-medium">&larr; Volver al Login</button>
+                <p>Esta vista es exclusiva para Padres y Administradores.</p>
+                <button onClick={() => router.push('/dashboard')} className="mt-4 text-blue-600 underline font-medium">&larr; Volver al Dashboard</button>
             </div>
         );
     }
@@ -98,32 +107,46 @@ const ParentDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
     const radarOptions = { scales: { r: { angleLines: { display: true }, suggestedMin: 50, suggestedMax: 100, pointLabels: { font: { size: 12 } } }, }, plugins: { legend: { display: true } } };
 
     return (
-        <div className="p-8 space-y-6">
-            <button onClick={() => router.back()} className="text-blue-600 hover:underline mb-4">&larr; Volver</button>
-            
-            <h1 className="text-3xl font-bold text-blue-700">Plan de Apoyo Familiar: {alumno.nombre}</h1>
+        <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '32px' }}>
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="space-y-6">
+                
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', p: 2, borderRadius: 2, boxShadow: 1, borderBottom: '4px solid #9c27b0', mb: 3, gap: 3 }}>
+                    <Button onClick={() => router.push('/dashboard')} variant="text" sx={{ color: '#9c27b0' }}>&larr; Volver</Button>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Button onClick={() => router.push(`/dashboard/admin/${alumno.id}`)} variant="contained" startIcon={<SecurityOutlined />} sx={{ backgroundColor: '#d32f2f' }}>Vista Admin</Button>
+                        <Button onClick={() => router.push(`/dashboard/docente/${alumno.id}`)} variant="contained" startIcon={<School />} sx={{ backgroundColor: '#1976d2' }}>Vista Docente</Button>
+                        <Button onClick={() => router.push(`/dashboard/padre/${alumno.id}`)} variant="contained" startIcon={<People />} sx={{ backgroundColor: '#9c27b0' }}>Vista Padre</Button>
+                        <Button onClick={() => router.push(`/dashboard/alumno/${alumno.id}`)} variant="contained" startIcon={<PersonOutline />} sx={{ backgroundColor: '#4caf50' }}>Vista Alumno</Button>
+                    </Box>
+                    <LogoutButton />
+                </Box>
 
-            {/* Métricas Globales */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <MetricCard titulo={"Nivel de Enfoque Necesario"} valor={`${(alumno.probabilidad_riesgo * 100).toFixed(1)}%`} />
-                <MetricCard titulo="Promedio Gral" valor={alumno.promedio_gral_calificacion.toFixed(2)} />
-                <MetricCard titulo="Área de Progreso" valor={alumno.area_de_progreso.toFixed(2)} />
-            </div>
+                <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#9c27b0', textAlign: 'center', mb: 3 }}>Plan de Apoyo Familiar: {alumno.nombre}</h1>
 
-            {/* Gráfico de Radar (Visible para todos) */}
-            <h2 className="text-2xl font-semibold mt-6">Rendimiento por Materia</h2>
-            <div className="bg-white p-6 rounded-2xl shadow-lg flex justify-center">
-                <div style={{ width: '800px', height: '600px' }}>
-                    <Radar data={radarData} options={radarOptions} />
+                {/* Métricas Globales */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <MetricCard titulo={"Nivel de Enfoque Necesario"} valor={`${(alumno.probabilidad_riesgo * 100).toFixed(1)}%`} />
+                    <MetricCard titulo="Promedio Gral" valor={alumno.promedio_gral_calificacion.toFixed(2)} />
+                    <MetricCard titulo="Área de Progreso" valor={alumno.area_de_progreso.toFixed(2)} />
                 </div>
-            </div>
 
-            {/* Recomendaciones Pedagógicas / Consejos para Padres (LENGUAJE SENSIBLE) */}
-            <div className="bg-yellow-50 border-l-4 border-blue-500 p-6 rounded-lg">
-                <h3 className="text-xl font-bold text-blue-800 mb-3">
-                    💡 Intervención Sugerida:
-                </h3>
-                <p className="whitespace-pre-line">{translatedRecommendation}</p>
+                {/* Gráfico de Radar (Visible para todos) */}
+                <div className="bg-white p-6 rounded-xl shadow-lg">
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-700">Rendimiento por Materia</h2>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ width: '100%', maxWidth: '600px', height: '400px' }}>
+                            <Radar data={radarData} options={{ ...radarOptions, responsive: true, maintainAspectRatio: false }} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Recomendaciones Pedagógicas / Consejos para Padres (LENGUAJE SENSIBLE) */}
+                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-purple-500">
+                    <h3 className="text-xl font-bold text-purple-800 mb-3">
+                        💡 Intervención Sugerida:
+                    </h3>
+                    <p className="whitespace-pre-line text-gray-700">{translatedRecommendation}</p>
+                </div>
             </div>
         </div>
     );

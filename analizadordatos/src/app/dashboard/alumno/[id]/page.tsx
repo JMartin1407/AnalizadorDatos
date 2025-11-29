@@ -7,7 +7,9 @@ import MetricCard from '@/components/MetricCard';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
 import { useRouter } from 'next/navigation';
-import LogoutButton from '@/components/LogoutButton'; 
+import LogoutButton from '@/components/LogoutButton';
+import { Button, Box } from '@mui/material';
+import { School, People, PersonOutline, SecurityOutlined } from '@mui/icons-material'; 
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
@@ -122,16 +124,24 @@ const StudentDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => 
     const radarOptions = { scales: { r: { angleLines: { display: true }, suggestedMin: 50, suggestedMax: 100, pointLabels: { font: { size: 12, weight: 'bold' } }, grid: { color: 'rgba(0, 0, 0, 0.1)' } } }, plugins: { legend: { display: true, position: 'bottom' } } };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
-            <div className="max-w-7xl mx-auto space-y-6">
+        <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '32px' }}>
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="space-y-6">
                 
-                <header className="flex justify-between items-center bg-white p-4 rounded-xl shadow-md border-b-4 border-blue-600">
-                    <h1 className="text-3xl font-extrabold text-blue-700">Mi Plan de Foco y Crecimiento: {alumno!.nombre}</h1>
-                    <LogoutButton /> 
-                </header>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', p: 2, borderRadius: 2, boxShadow: 1, borderBottom: '4px solid #4caf50', mb: 3, gap: 3 }}>
+                    <Button onClick={() => router.push('/dashboard')} variant="text" sx={{ color: '#4caf50' }}>&larr; Volver</Button>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Button onClick={() => router.push(`/dashboard/admin/${alumno!.id}`)} variant="contained" startIcon={<SecurityOutlined />} sx={{ backgroundColor: '#d32f2f' }}>Vista Admin</Button>
+                        <Button onClick={() => router.push(`/dashboard/docente/${alumno!.id}`)} variant="contained" startIcon={<School />} sx={{ backgroundColor: '#1976d2' }}>Vista Docente</Button>
+                        <Button onClick={() => router.push(`/dashboard/padre/${alumno!.id}`)} variant="contained" startIcon={<People />} sx={{ backgroundColor: '#9c27b0' }}>Vista Padre</Button>
+                        <Button onClick={() => router.push(`/dashboard/alumno/${alumno!.id}`)} variant="contained" startIcon={<PersonOutline />} sx={{ backgroundColor: '#4caf50' }}>Vista Alumno</Button>
+                    </Box>
+                    <LogoutButton />
+                </Box>
+                
+                <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#4caf50', textAlign: 'center', mb: 3 }}>Mi Plan de Foco: {alumno!.nombre}</h1>
             
                 {/* Métricas Globales (Lenguaje de Alumno) */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <MetricCard titulo={"Nivel de Enfoque Necesario"} valor={`${(alumno!.probabilidad_riesgo * 100).toFixed(1)}%`} />
                     <MetricCard titulo="Mi Promedio General" valor={alumno!.promedio_gral_calificacion.toFixed(2)} />
                     <MetricCard titulo="Mi Esfuerzo Constante" valor={alumno!.area_de_progreso.toFixed(2)} />
@@ -140,9 +150,9 @@ const StudentDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => 
                 {/* Gráfico de Radar */}
                 <div className="bg-white p-6 rounded-xl shadow-lg">
                     <h2 className="text-2xl font-semibold mb-4 text-gray-700">Tu Desempeño por Materia</h2>
-                    <div className="flex justify-center">
-                        <div style={{ width: '90%', maxWidth: '800px', height: '600px' }}>
-                            <Radar data={radarData} options={radarOptions} />
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ width: '100%', maxWidth: '600px', height: '400px' }}>
+                            <Radar data={radarData} options={{ ...radarOptions, responsive: true, maintainAspectRatio: false }} />
                         </div>
                     </div>
                 </div>

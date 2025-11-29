@@ -12,6 +12,7 @@ from sqlalchemy.future import select
 DATABASE_URL = "mysql+aiomysql://root:@localhost/analisis_academico"
 engine = create_async_engine(DATABASE_URL)
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
+SessionLocal = AsyncSessionLocal  # Alias para compatibilidad
 
 class Base(AsyncAttrs, DeclarativeBase):
     pass
@@ -85,10 +86,10 @@ async def init_db_user():
             
             if user is None:
                 usuarios_prueba = [
-                    Usuario(email="admin@escuela.edu", password_hash="admin", rol="Admin", nombre="Admin Superior"),
-                    Usuario(email="docente@escuela.edu", password_hash="docente", rol="Docente", nombre="Mtra. Elena"),
-                    Usuario(email="alumno@escuela.edu", password_hash="alumno", rol="Alumno", nombre="Alumno Test"),
-                    Usuario(email="padre@escuela.edu", password_hash="padre", rol="Padre", nombre="Padre de Familia"),
+                    Usuario(email="admin@escuela.edu", password_hash="pass123", rol="Admin", nombre="Admin Superior"),
+                    Usuario(email="docente@escuela.edu", password_hash="pass123", rol="Docente", nombre="Mtra. Elena"),
+                    Usuario(email="alumno@escuela.edu", password_hash="pass123", rol="Alumno", nombre="Alumno Test"),
+                    Usuario(email="padre@escuela.edu", password_hash="pass123", rol="Padre", nombre="Padre de Familia"),
                 ]
                 session.add_all(usuarios_prueba)
                 await session.commit()

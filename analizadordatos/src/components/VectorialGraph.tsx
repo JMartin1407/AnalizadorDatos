@@ -61,8 +61,9 @@ const VectorialGraph: React.FC<VectorialGraphProps> = ({ data, std_promedio }) =
     };
 
     const layout = {
-        width: 800,
-        height: 700,
+        width: 500,
+        height: 450,
+        autosize: false,
         scene: {
             xaxis: {
                 title: { text: 'Promedio Calificación (P)' },
@@ -83,19 +84,21 @@ const VectorialGraph: React.FC<VectorialGraphProps> = ({ data, std_promedio }) =
         },
         title: {
             text: `Análisis Vectorial de Desempeño Grupal (STD Promedio: ${std_promedio.toFixed(2)})`,
-            font: { size: 16 }
+            font: { size: 14 }
         },
         margin: {
-            l: 0, r: 0, b: 0, t: 50
-        }
+            l: 30, r: 30, b: 30, t: 40
+        },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)'
     };
 
     return (
-        <div className="flex justify-center w-full">
+        <div style={{ width: '100%', overflow: 'auto' }}>
             <Plot
                 data={[student_traces, ideal_trace] as Plotly.Data[]}
                 layout={layout as Partial<Plotly.Layout>} 
-                config={{ responsive: true }}
+                config={{ responsive: false, displayModeBar: false }}
             />
         </div>
     );

@@ -8,6 +8,8 @@ import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
 import { useRouter } from 'next/navigation';
 import LogoutButton from '@/components/LogoutButton';
+import { Button, Box } from '@mui/material';
+import { School, People, PersonOutline, SecurityOutlined } from '@mui/icons-material';
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
@@ -56,14 +58,14 @@ const DocenteDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => 
     const router = useRouter();
     const { alumno, isLoading, userRole } = useStudentData(params.id);
     
-    if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="text-xl text-blue-600">Cargando datos para gestión...</div></div>;
+    if (isLoading) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}><div className="text-xl text-blue-600">Cargando datos para gestión...</div></div>;
     
     // REGLA CORREGIDA: Acceso permitido si es Docente O Admin
     const canAccess = userRole === 'Docente' || userRole === 'Admin';
 
     if (!canAccess) {
          return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}>
                 <div className="p-8 text-center bg-white rounded-xl shadow-lg border-t-4 border-red-600">
                     <h2 className="text-2xl font-bold mb-3 text-red-700">⚠️ Acceso Denegado (Ruta de Docente)</h2>
                     <p className="text-gray-600">Esta vista es exclusiva para Docentes y Supervisión Administrativa.</p>
@@ -97,14 +99,21 @@ const DocenteDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => 
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
-            <div className="max-w-7xl mx-auto space-y-6">
+        <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '32px' }}>
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="space-y-6">
                 
-                <header className="flex justify-between items-center bg-white p-4 rounded-xl shadow-md border-b-4 border-blue-600">
-                    <button onClick={() => router.push('/dashboard')} className="text-blue-600 hover:text-blue-800 font-medium transition">&larr; Volver a la Lista Grupal</button>
-                    <h1 className="text-3xl font-extrabold text-blue-700">Intervención Pedagógica: {alumno.nombre}</h1>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', p: 2, borderRadius: 2, boxShadow: 1, borderBottom: '4px solid #1976d2', mb: 3, gap: 3 }}>
+                    <Button onClick={() => router.push('/dashboard')} variant="text" sx={{ color: '#1976d2' }}>&larr; Volver</Button>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Button onClick={() => router.push(`/dashboard/admin/${alumno.id}`)} variant="contained" startIcon={<SecurityOutlined />} sx={{ backgroundColor: '#d32f2f' }}>Vista Admin</Button>
+                        <Button onClick={() => router.push(`/dashboard/docente/${alumno.id}`)} variant="contained" startIcon={<School />} sx={{ backgroundColor: '#1976d2' }}>Vista Docente</Button>
+                        <Button onClick={() => router.push(`/dashboard/padre/${alumno.id}`)} variant="contained" startIcon={<People />} sx={{ backgroundColor: '#9c27b0' }}>Vista Padre</Button>
+                        <Button onClick={() => router.push(`/dashboard/alumno/${alumno.id}`)} variant="contained" startIcon={<PersonOutline />} sx={{ backgroundColor: '#4caf50' }}>Vista Alumno</Button>
+                    </Box>
                     <LogoutButton />
-                </header>
+                </Box>
+
+                <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#1976d2', textAlign: 'center', mb: 3 }}>Intervención Pedagógica: {alumno.nombre}</h1>
 
                 {/* Métrica TÉCNICA (Necesario para la intervención) */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -117,9 +126,9 @@ const DocenteDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => 
                 {/* Gráfico de Radar (Gráfico Vectorial por Materia) */}
                 <div className="bg-white p-6 rounded-xl shadow-lg">
                     <h2 className="text-2xl font-semibold mb-4 text-gray-700">Rendimiento por Materia (Gráfico Vectorial)</h2>
-                    <div className="flex justify-center">
-                        <div style={{ width: '90%', maxWidth: '800px', height: '600px' }}>
-                            <Radar data={radarData} options={radarOptions} />
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ width: '100%', maxWidth: '600px', height: '400px' }}>
+                            <Radar data={radarData} options={{ ...radarOptions, responsive: true, maintainAspectRatio: false }} />
                         </div>
                     </div>
                 </div>

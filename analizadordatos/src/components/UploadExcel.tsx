@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'; 
 import { Alumno, BackendMetrics, Correlaciones, GrupoEstadistica, UserRole } from "@/lib/analytics"; 
+import { colorPalette } from "@/lib/theme"; 
 
 
 const UploadExcel: React.FC<any> = ({ onAnalysisComplete }) => {
@@ -86,26 +87,51 @@ const UploadExcel: React.FC<any> = ({ onAnalysisComplete }) => {
     const canUpload = userRole === 'Admin';
     
     return (
-        <div className="flex flex-col items-center justify-center space-y-2 p-4 bg-white rounded-2xl shadow">
-            <p className="text-gray-600 text-sm">
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            padding: '16px',
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+            <p style={{ color: colorPalette.primary4, fontSize: '14px', margin: 0 }}>
                 {canUpload ? "Sube el archivo de datos para análisis (Rol: ADMIN)." : "Acceso de carga denegado. Solo ADMIN."}
             </p>
             <input
                 type="file"
                 accept=".xlsx, .xls"
                 onChange={handleFileChange}
-                className="cursor-pointer p-2 border rounded-md"
+                style={{
+                    cursor: 'pointer',
+                    padding: '8px',
+                    border: `1px solid ${colorPalette.primary1}`,
+                    borderRadius: '6px',
+                    opacity: canUpload ? 1 : 0.5
+                }}
                 disabled={!canUpload} 
             />
             <button 
                 onClick={handleUpload} 
                 disabled={loading || !file || !canUpload}
-                className={`w-full px-4 py-2 text-white rounded-lg transition 
-                            ${canUpload ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'}`}
+                style={{
+                    width: '100%',
+                    padding: '10px 16px',
+                    color: '#ffffff',
+                    borderRadius: '8px',
+                    border: 'none',
+                    transition: 'background-color 0.2s',
+                    backgroundColor: canUpload ? colorPalette.primary1 : '#cccccc',
+                    cursor: canUpload ? 'pointer' : 'not-allowed',
+                    fontWeight: '600'
+                }}
             >
                 {loading ? 'Procesando...' : 'Analizar Datos Multi-Materia'}
             </button>
-            {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
+            {error && <p style={{ color: '#d32f2f', fontSize: '12px', marginTop: '8px', margin: 0 }}>{error}</p>}
         </div>
     );
 };

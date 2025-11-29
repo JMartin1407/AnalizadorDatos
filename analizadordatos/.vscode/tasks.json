@@ -1,0 +1,47 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Probar conexión a base de datos Azure",
+			"type": "shell",
+			"command": "python backend/database.py",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Probar conexión a base de datos Azure",
+			"type": "shell",
+			"command": "python backend/database.py",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Probar conexión a base de datos Azure",
+			"type": "shell",
+			"command": "python backend/database.py",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Probar conexión a base de datos Azure",
+			"type": "shell",
+			"command": "python backend/database.py",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Probar conexión directa mysql-connector",
+			"type": "shell",
+			"command": "python backend/test_mysql_connector.py",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Probar conexión directa mysql-connector",
+			"type": "shell",
+			"command": "python backend/test_mysql_connector.py",
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}
