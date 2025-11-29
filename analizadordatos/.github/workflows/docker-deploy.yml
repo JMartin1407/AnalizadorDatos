@@ -1,4 +1,4 @@
-name: Build and Deploy Docker to Azure
+name: Build and Deploy to Azure
 
 on:
   push:
@@ -13,20 +13,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Login to Azure CLI
+      - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Build and push image to ACR
+      - name: Build and push image
         run: |
           az acr build \
             --registry analizadorv2acr \
-            --image analizador:${{ github.sha }} \
             --image analizador:latest \
-            --file Dockerfile .
+            -f Dockerfile .
 
-      - name: Update App Service with new image
+      - name: Deploy to App Service
         run: |
           az webapp config container set \
             --name analizador-v2 \
@@ -35,3 +34,9 @@ jobs:
             --docker-registry-server-url https://analizadorv2acr.azurecr.io \
             --docker-registry-server-user ${{ secrets.ACR_USERNAME }} \
             --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
+
+      - name: Restart App Service
+        run: |
+          az webapp restart \
+            --name analizador-v2 \
+            --resource-group rg-dbanaliz
