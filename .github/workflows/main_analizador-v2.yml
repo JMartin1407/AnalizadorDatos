@@ -63,4 +63,4 @@ jobs:
         with:
           app-name: 'analizador-v2'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_91A225761C0C4322A48C73459CC0F613 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_12D5DDDFB7EF4023943B1B641E38C172 }}
