@@ -11,14 +11,20 @@ interface LoginResponse {
     id?: number; 
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
-
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    
+    // Obtener la URL base dinámicamente en tiempo de runtime
+    const getApiUrl = () => {
+        if (typeof window !== 'undefined') {
+            return window.location.origin;
+        }
+        return '';
+    };
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -26,9 +32,8 @@ const LoginPage: React.FC = () => {
         setError('');
 
         try {
-            // CORRECCIÓN 1: Usar la variable de entorno y tipar la respuesta
             const response: AxiosResponse<LoginResponse> = await axios.post(
-                `${API_BASE_URL}/auth/login`, // URL Dinámica para Azure/Local
+                `/auth/login`,
                 {
                     email,
                     password,

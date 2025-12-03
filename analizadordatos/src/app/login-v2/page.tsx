@@ -11,7 +11,12 @@ interface LoginResponse {
     id?: number; 
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+const getApiBaseUrl = () => {
+    if (typeof window !== 'undefined') {
+        return window.location.origin;
+    }
+    return process.env.NEXT_PUBLIC_API_BASE_URL || '';
+};
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -27,7 +32,7 @@ const LoginPage: React.FC = () => {
 
         try {
             const response: AxiosResponse<LoginResponse> = await axios.post(
-                `${API_BASE_URL}/auth/login`,
+                `/auth/login`,
                 { email, password }
             );
 

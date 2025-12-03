@@ -7,9 +7,17 @@ from datetime import datetime
 from typing import List
 from fastapi import Depends
 from sqlalchemy.future import select
+import os
 
-# REEMPLAZA con tu URL de MySQL real:
-DATABASE_URL = "mysql+aiomysql://root:@localhost/analisis_academico"
+# Leer credenciales de variables de entorno
+DB_HOST = os.environ.get("DB_HOST", "localhost")
+DB_USER = os.environ.get("DB_USER", "root")
+DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
+DB_NAME = os.environ.get("DB_NAME", "analisis_academico")
+DB_PORT = os.environ.get("DB_PORT", "3306")
+
+# Construir URL de MySQL
+DATABASE_URL = f"mysql+aiomysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_async_engine(DATABASE_URL)
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 SessionLocal = AsyncSessionLocal  # Alias para compatibilidad
@@ -78,22 +86,26 @@ async def get_db():
 async def init_db_user():
     from sqlalchemy.exc import NoResultFound
     
-    async with AsyncSessionLocal() as session:
-        try:
-            stmt = select(Usuario).where(Usuario.email == "admin@escuela.edu")
-            result = await session.execute(stmt)
-            user = result.scalar_one_or_none()
-            
-            if user is None:
-                usuarios_prueba = [
-                    Usuario(email="admin@escuela.edu", password_hash="pass123", rol="Admin", nombre="Admin Superior"),
-                    Usuario(email="docente@escuela.edu", password_hash="pass123", rol="Docente", nombre="Mtra. Elena"),
-                    Usuario(email="alumno@escuela.edu", password_hash="pass123", rol="Alumno", nombre="Alumno Test"),
+    try:
+        async with AsyncSessionLocal() as session:
+            try:
+                stmt = select(Usuario).where(Usuario.email == "admin@escuela.edu")
+                result = await session.execute(stmt)
+                user = result.scalar_one_or_none()
+                
+                if user is None:
+                    usuarios_prueba = [
+                        Usuario(email="admin@escuela.edu", password_hash="pass123", rol="Admin", nombre="Admin Superior"),
+                        Usuario(email="docente@escuela.edu", password_hash="pass123", rol="Docente", nombre="Mtra. Elena"),
+                        Usuario(email="alumno@escuela.edu", password_hash="pass123", rol="Alumno", nombre="Alumno Test"),
                     Usuario(email="padre@escuela.edu", password_hash="pass123", rol="Padre", nombre="Padre de Familia"),
                 ]
                 session.add_all(usuarios_prueba)
                 await session.commit()
             
-        except Exception as e:
-            print(f"Error durante la inicialización de usuario: {e}")
+            except Exception as e:
+                print(f"Error durante la inicialización de usuario: {e}")
+    except Exception as e:
+        print(f"Warning: No se pudo conectar a la base de datos al iniciar: {e}")
+        print("La aplicación continuará, la BD se conectará cuando sea necesario.")
             raise

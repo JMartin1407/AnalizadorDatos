@@ -7,22 +7,11 @@ services:
       - "3000:3000"
       - "8000:8000"
     environment:
-      - DATABASE_URL=mysql+aiomysql://user:pass123@db:3306/analizador
-    depends_on:
-      - db
+      - DB_HOST=cosa-analizador.mysql.database.azure.com
+      - DB_USER=Martin
+      - DB_PASSWORD=FILOMENO.2025
+      - DB_NAME=cosa-analizador
+      - DB_PORT=3306
     volumes:
       - ./src:/app/src
       - ./backend:/app/backend
-
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: pass123
-      MYSQL_DATABASE: analizador
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-
-volumes:
-  mysql_data:

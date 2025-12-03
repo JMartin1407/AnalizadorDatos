@@ -5,26 +5,34 @@ WORKDIR /app
 # Copiar package files
 COPY package*.json ./
 
+# Copiar todo el código necesario para el build
+COPY tsconfig.json ./
+COPY next.config.ts ./
+COPY postcss.config.mjs ./
+COPY src ./src
+COPY public ./public
+
 # Instalar dependencias y compilar
-RUN npm ci
+RUN npm install
+ENV NEXT_PUBLIC_API_URL=""
 RUN npm run build
 
 # Stage final - Python + Node runtime
-FROM python:3.13-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Instalar Node.js (runtime solamente)
-RUN apt-get update && apt-get install -y nodejs npm curl && rm -rf /var/lib/apt/lists/*
+# Instalar Node.js, Nginx y herramientas necesarias
+RUN apt-get update && apt-get install -y nodejs npm curl supervisor nginx && rm -rf /var/lib/apt/lists/*
 
 # Copiar Next.js build desde builder
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
+COPY package.json package-lock.json ./
 
 # Copiar archivos de la app
 COPY requirements.txt .
-COPY package.json package-lock.json ./
 COPY src ./src
 COPY backend ./backend
 COPY run_server.py .
@@ -32,12 +40,16 @@ COPY run_server.py .
 # Instalar Python deps
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Healthcheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8000/health || exit 1
+# Crear archivo de configuración de supervisor para ejecutar ambos servicios
+RUN mkdir -p /etc/supervisor/conf.d
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Exponer puertos
-EXPOSE 8000
+# Crear y configurar Nginx como proxy inverso
+RUN mkdir -p /etc/nginx/conf.d
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Comando de inicio - ejecutar solo FastAPI (Next.js se sirve como static)
-CMD ["python", "run_server.py"]
+# Exponer puerto (Nginx)
+EXPOSE 80
+
+# Comando de inicio - ejecutar supervisor para ambos servicios
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

@@ -17,7 +17,7 @@ const LoginPage: React.FC = () => {
         setError('');
 
         try {
-            const response = await axios.post('http://localhost:8000/auth/login', { email, password });
+            const response = await axios.post(`/auth/login`, { email, password });
             const { token, rol, nombre } = response.data;
 
             localStorage.setItem('authToken', token);

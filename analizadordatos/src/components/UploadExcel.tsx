@@ -46,7 +46,7 @@ const UploadExcel: React.FC<any> = ({ onAnalysisComplete }) => {
         try {
  
             const response = await axios.post<any>(
-                'http://localhost:8000/admin/upload-and-analyze/',
+                `/admin/upload-and-analyze/`,
                 formData,
                 { headers: { 
                     'Content-Type': 'multipart/form-data',

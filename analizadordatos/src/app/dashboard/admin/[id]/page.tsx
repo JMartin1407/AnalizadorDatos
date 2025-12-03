@@ -113,7 +113,7 @@ const DocenteDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => 
                     <LogoutButton />
                 </Box>
 
-                <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#1976d2', textAlign: 'center', mb: 3 }}>Intervención Pedagógica: {alumno.nombre}</h1>
+                <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#1976d2', textAlign: 'center', marginBottom: '24px' }}>Intervención Pedagógica: {alumno.nombre}</h1>
 
                 {/* Métrica TÉCNICA (Necesario para la intervención) */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
