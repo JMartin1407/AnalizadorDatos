@@ -1,10 +1,6 @@
 // src/app/dashboard/alumno/[id]/page.tsx
 'use client';
 
-export function generateStaticParams() {
-  return [];
-}
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { Alumno, MATERIAS, UserRole } from '@/lib/analytics';
 import MetricCard from '@/components/MetricCard';
