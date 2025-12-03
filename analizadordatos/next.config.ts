@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -13,7 +12,6 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   // Optimizaciones para build más rápido
-  swcMinify: true,
   compress: true,
   productionBrowserSourceMaps: false,
 };
