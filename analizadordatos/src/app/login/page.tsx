@@ -32,8 +32,9 @@ const LoginPage: React.FC = () => {
         setError('');
 
         try {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://apiazuremsc-anhefqf5gzepdcav.mexicocentral-01.azurewebsites.net';
             const response: AxiosResponse<LoginResponse> = await axios.post(
-                `/auth/login`,
+                `${API_URL}/auth/login`,
                 {
                     email,
                     password,

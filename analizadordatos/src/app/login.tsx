@@ -17,7 +17,8 @@ const LoginPage: React.FC = () => {
         setError('');
 
         try {
-            const response = await axios.post(`/auth/login`, { email, password });
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://apiazuremsc-anhefqf5gzepdcav.mexicocentral-01.azurewebsites.net';
+            const response = await axios.post(`${API_URL}/auth/login`, { email, password });
             const { token, rol, nombre } = response.data;
 
             localStorage.setItem('authToken', token);

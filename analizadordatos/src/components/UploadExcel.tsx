@@ -44,9 +44,9 @@ const UploadExcel: React.FC<any> = ({ onAnalysisComplete }) => {
         formData.append('file', file);
 
         try {
- 
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://apiazuremsc-anhefqf5gzepdcav.mexicocentral-01.azurewebsites.net';
             const response = await axios.post<any>(
-                `/admin/upload-and-analyze/`,
+                `${API_URL}/admin/upload-and-analyze/`,
                 formData,
                 { headers: { 
                     'Content-Type': 'multipart/form-data',
