@@ -30,7 +30,7 @@ jobs:
       - name: Build application
         run: |
           cd analizadordatos
-          npm ci
+          npm install
           npm run build
           cp staticwebapp.config.json out/staticwebapp.config.json
         shell: bash
