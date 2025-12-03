@@ -48,7 +48,7 @@ const Dashboard = () => {
         setUserName(name);
 
         if (role !== 'Admin' && role !== 'Docente') {
-            router.push(`/dashboard/${role.toLowerCase()}/${token}`);
+            router.push(`/dashboard/view?role=${role.toLowerCase()}&id=${token}`);
             return;
         }
         

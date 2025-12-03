@@ -1,18 +1,17 @@
 'use client';
 
 import React from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Box, Tabs, Tab } from '@mui/material';
 import { Shield, BookOpen, Users, User } from 'lucide-react';
 
 interface RoleNavigationProps {
   currentRole: 'admin' | 'docente' | 'padre' | 'alumno';
+  studentId: string;
 }
 
-export default function RoleNavigation({ currentRole }: RoleNavigationProps) {
+export default function RoleNavigation({ currentRole, studentId }: RoleNavigationProps) {
   const router = useRouter();
-  const params = useParams();
-  const studentId = params?.id as string;
 
   const roles = [
     { key: 'admin', label: 'Admin', icon: Shield, color: '#dc2626' },
@@ -22,7 +21,7 @@ export default function RoleNavigation({ currentRole }: RoleNavigationProps) {
   ];
 
   const handleNavigation = (role: string) => {
-    router.push(`/dashboard/${role}/${studentId}`);
+    router.push(`/dashboard/view?role=${role}&id=${studentId}`);
   };
 
   const currentIndex = roles.findIndex(r => r.key === currentRole);

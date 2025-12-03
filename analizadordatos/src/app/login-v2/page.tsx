@@ -45,12 +45,12 @@ const LoginPage: React.FC = () => {
 
             const targetId = id || 1; 
 
-            if (rol === 'Admin' || rol === 'Docente') {
+            if (role === 'Admin' || role === 'Docente') {
                 router.push('/dashboard');
-            } else if (rol === 'Alumno') {
-                router.push(`/dashboard/alumno/${targetId}`);
-            } else if (rol === 'Padre') {
-                router.push(`/dashboard/padre/${targetId}`);
+            } else if (role === 'Alumno') {
+                router.push(`/dashboard/view?role=alumno&id=${targetId}`);
+            } else if (role === 'Padre') {
+                router.push(`/dashboard/view?role=padre&id=${targetId}`);
             }
         } catch (err: unknown) {
             let mensaje = 'Fallo de autenticación. Verifique las credenciales.';

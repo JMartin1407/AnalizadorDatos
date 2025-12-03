@@ -16,11 +16,8 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     const userRole = localStorage.getItem('userRole'); 
 
     const handleRowClick = (alumno: Alumno) => {
-        if (userRole === 'Admin') {
-            router.push(`/dashboard/admin/${alumno.id}`); 
-        } else if (userRole === 'Docente') {
-            router.push(`/dashboard/docente/${alumno.id}`);
-        }
+        const role = userRole?.toLowerCase() || 'admin';
+        router.push(`/dashboard/view?role=${role}&id=${alumno.id}`);
     };
 
     // Función para determinar color de riesgo
