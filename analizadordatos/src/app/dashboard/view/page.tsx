@@ -137,7 +137,7 @@ function DashboardViewContent() {
         labels: MATERIAS,
         datasets: [{
             label: 'Calificaciones',
-            data: MATERIAS.map(m => alumno.calificaciones[m] || 0),
+            data: MATERIAS.map(m => alumno.detalle_materias?.[m]?.calificacion || 0),
             backgroundColor: 'rgba(59, 130, 246, 0.2)',
             borderColor: 'rgba(59, 130, 246, 1)',
             borderWidth: 2,
