@@ -85,8 +85,8 @@ function DashboardViewContent() {
         const storedRole = localStorage.getItem('userRole') as UserRole | null;
         setUserRole(storedRole);
         
-        // Validar que el rol coincida
-        if (roleParam && storedRole && roleParam !== storedRole) {
+        // Validar que el rol coincida (comparar en minúsculas)
+        if (roleParam && storedRole && roleParam.toLowerCase() !== storedRole.toLowerCase()) {
             router.push('/');
         }
     }, [roleParam, router]);
