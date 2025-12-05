@@ -49,17 +49,16 @@ const LoginPage: React.FC = () => {
             localStorage.setItem('userRole', rol);
             localStorage.setItem('userName', nombre);
 
-            // Si el backend no devuelve un ID (como indica tu código), usamos el estático
-            const targetId = id || 1; 
+            const targetId = id || 1;
 
-            // Redirecciones por rol
-            if (role === 'Admin' || role === 'Docente') {
+            if (rol === 'Admin' || rol === 'Docente') {
                 router.push('/dashboard');
-            } else if (role === 'Alumno') {
-                router.push(`/dashboard/view?role=alumno&id=${targetId}`);
-            } else if (role === 'Padre') {
-                router.push(`/dashboard/view?role=padre&id=${targetId}`);
+            } else if (rol === 'Alumno') {
+                router.push(`/dashboard/alumno?id=${targetId}`);
+            } else if (rol === 'Padre') {
+                router.push(`/dashboard/padre?id=${targetId}`);
             }
+
         } catch (err: unknown) {
             let mensaje = 'Fallo de autenticación. Verifique las credenciales.';
             

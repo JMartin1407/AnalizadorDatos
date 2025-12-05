@@ -17,7 +17,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
     const handleRowClick = (alumno: Alumno) => {
         const role = userRole?.toLowerCase() || 'admin';
-        router.push(`/dashboard/view?role=${role}&id=${alumno.id}`);
+        router.push(`/dashboard/${role}?id=${alumno.id}`);
     };
 
     // Función para determinar color de riesgo

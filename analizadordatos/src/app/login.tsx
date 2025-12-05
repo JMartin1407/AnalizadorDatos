@@ -30,11 +30,9 @@ const LoginPage: React.FC = () => {
             if (rol === 'Admin' || rol === 'Docente') {
                 router.push('/dashboard');
             } else if (rol === 'Alumno') {
-
-                router.push(`/dashboard/view?role=alumno&id=${SIMULATED_ALUMNO_ID}`); 
+                router.push(`/dashboard/alumno?id=${SIMULATED_ALUMNO_ID}`); 
             } else if (rol === 'Padre') {
-
-                router.push(`/dashboard/view?role=padre&id=${SIMULATED_ALUMNO_ID}`); 
+                router.push(`/dashboard/padre?id=${SIMULATED_ALUMNO_ID}`); 
             }
 
         } catch (e: any) {
