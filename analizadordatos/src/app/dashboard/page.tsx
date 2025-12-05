@@ -71,10 +71,31 @@ const Dashboard = () => {
     const isDocente = userRole === 'Docente';
     const isAdministrativo = userRole === 'Admin';
 
-    const handleDataLoaded = (loadedData: Alumno[], metrics: BackendMetrics) => {
-        setData(loadedData);
+    const handleDataLoaded = (loadedData: any[], metrics: BackendMetrics) => {
+        // Transformar los datos del backend al formato esperado por el frontend
+        const transformedData: Alumno[] = loadedData.map(alumno => {
+            // Convertir detalle_promedios_por_materia a detalle_materias
+            const detalle_materias: Record<string, { calificacion: number; asistencia: number; conducta: number }> = {};
+            
+            if (alumno.detalle_promedios_por_materia) {
+                Object.keys(alumno.detalle_promedios_por_materia).forEach(materia => {
+                    detalle_materias[materia] = {
+                        calificacion: alumno.detalle_promedios_por_materia[materia] || 0,
+                        asistencia: alumno.promedio_gral_asistencia || 0,
+                        conducta: alumno.promedio_gral_conducta || 0
+                    };
+                });
+            }
+            
+            return {
+                ...alumno,
+                detalle_materias
+            };
+        });
+        
+        setData(transformedData);
         setBackendMetrics(metrics); 
-        localStorage.setItem('analisisData', JSON.stringify(loadedData));
+        localStorage.setItem('analisisData', JSON.stringify(transformedData));
     };
 
     const chartData = {
