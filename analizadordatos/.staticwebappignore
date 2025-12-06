@@ -1,0 +1,8 @@
+# Excluir del despliegue
+*.map
+*.txt
+!robots.txt
+!sitemap.txt
+_next/static/chunks/*.js.map
+.DS_Store
+Thumbs.db

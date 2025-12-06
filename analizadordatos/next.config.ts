@@ -13,9 +13,13 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  // Optimizaciones para build más rápido
+  // Optimizaciones para build más rápido y archivos más pequeños
   compress: true,
   productionBrowserSourceMaps: false,
+  // Reducir duplicación de código
+  experimental: {
+    optimizePackageImports: ['@mui/material', '@mui/icons-material', 'chart.js', 'react-chartjs-2'],
+  },
 };
 
 export default nextConfig;

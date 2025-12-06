@@ -1,0 +1,9 @@
+# Comprimir archivos estáticos
+*.js linguist-detectable=false
+*.css linguist-detectable=false
+*.html linguist-detectable=false
+*.json linguist-detectable=false
+
+# LFS para archivos grandes (si los hay)
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.tar.gz filter=lfs diff=lfs merge=lfs -text

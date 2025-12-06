@@ -33,6 +33,11 @@ jobs:
           npm install
           npm run build
           cp staticwebapp.config.json out/staticwebapp.config.json
+          # Limpiar archivos innecesarios para reducir tamaño
+          find out -name "*.map" -type f -delete
+          find out -name "*.txt" -type f -not -name "robots.txt" -delete
+          # Mostrar tamaño final
+          du -sh out
         shell: bash
       
       - name: Build And Deploy
