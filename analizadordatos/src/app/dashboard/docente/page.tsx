@@ -89,27 +89,35 @@ function DocenteViewContent() {
     };
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '24px' }}>
+        <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)', padding: '24px' }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                    <div>
-                        <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: colorPalette.primary1 }}>
-                            Evaluación Detallada - {alumno.nombre}
+                {/* Header con badge de Docente */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', backgroundColor: '#fff', padding: '20px', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                    <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                            <div style={{ backgroundColor: '#9c27b0', padding: '6px 16px', borderRadius: '20px', color: '#fff', fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span>👨‍🏫</span>
+                                <span>DOCENTE</span>
+                            </div>
+                            <button 
+                                onClick={() => router.push('/dashboard')}
+                                style={{ 
+                                    padding: '6px 14px', 
+                                    backgroundColor: '#7b1fa2', 
+                                    color: '#fff', 
+                                    borderRadius: '8px', 
+                                    border: 'none', 
+                                    cursor: 'pointer',
+                                    fontSize: '13px',
+                                    fontWeight: '500'
+                                }}
+                            >
+                                ← Volver
+                            </button>
+                        </div>
+                        <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#6a1b9a' }}>
+                            Evaluación Pedagógica - {alumno.nombre}
                         </h1>
-                        <button 
-                            onClick={() => router.push('/dashboard')}
-                            style={{ 
-                                marginTop: '8px', 
-                                padding: '8px 16px', 
-                                backgroundColor: colorPalette.primary1, 
-                                color: '#fff', 
-                                borderRadius: '8px', 
-                                border: 'none', 
-                                cursor: 'pointer' 
-                            }}
-                        >
-                            ← Volver al Dashboard
-                        </button>
                     </div>
                     <LogoutButton />
                 </div>

@@ -89,12 +89,21 @@ function PadreViewContent() {
     };
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '24px' }}>
+        <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)', padding: '24px' }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                    <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: colorPalette.primary1 }}>
-                        Seguimiento - {alumno.nombre}
-                    </h1>
+                {/* Header con badge de Padre/Tutor */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', backgroundColor: '#fff', padding: '20px', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                    <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                            <div style={{ backgroundColor: '#ff9800', padding: '6px 16px', borderRadius: '20px', color: '#fff', fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span>👨‍👩‍👧</span>
+                                <span>PADRE/TUTOR</span>
+                            </div>
+                        </div>
+                        <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#e65100' }}>
+                            Seguimiento - {alumno.nombre}
+                        </h1>
+                    </div>
                     <LogoutButton />
                 </div>
 

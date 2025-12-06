@@ -76,34 +76,61 @@ function AlumnoViewContent() {
     };
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '24px' }}>
+        <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)', padding: '24px' }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                    <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: colorPalette.primary1 }}>
-                        Mi Desempeño - {alumno.nombre}
-                    </h1>
+                {/* Header con badge de Alumno */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', backgroundColor: '#fff', padding: '20px', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                    <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                            <div style={{ backgroundColor: '#4caf50', padding: '6px 16px', borderRadius: '20px', color: '#fff', fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span>👨‍🎓</span>
+                                <span>ESTUDIANTE</span>
+                            </div>
+                        </div>
+                        <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#2e7d32' }}>
+                            Mi Desempeño - {alumno.nombre}
+                        </h1>
+                    </div>
                     <LogoutButton />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px', marginBottom: '24px' }}>
-                    <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                        <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>Promedio General</div>
-                        <div style={{ fontSize: '32px', fontWeight: 'bold', color: colorPalette.primary1 }}>
+                    <div style={{ background: 'linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)', padding: '20px', borderRadius: '16px', boxShadow: '0 4px 12px rgba(76,175,80,0.3)', color: '#fff' }}>
+                        <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>📊</span>
+                            <span>Promedio General</span>
+                        </div>
+                        <div style={{ fontSize: '36px', fontWeight: 'bold' }}>
                             {alumno.promedio_gral_calificacion?.toFixed(1) || 'N/A'}
                         </div>
-                    </div>
-
-                    <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                        <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>Asistencia</div>
-                        <div style={{ fontSize: '32px', fontWeight: 'bold', color: colorPalette.secondary1 }}>
-                            {alumno.promedio_gral_asistencia?.toFixed(1) || 'N/A'}%
+                        <div style={{ fontSize: '12px', marginTop: '8px', opacity: 0.8 }}>
+                            {alumno.promedio_gral_calificacion >= 85 ? '¡Excelente!' : alumno.promedio_gral_calificacion >= 70 ? 'Buen trabajo' : 'Puedes mejorar'}
                         </div>
                     </div>
 
-                    <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                        <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>Conducta</div>
-                        <div style={{ fontSize: '32px', fontWeight: 'bold', color: colorPalette.accent1 }}>
+                    <div style={{ background: 'linear-gradient(135deg, #2196f3 0%, #42a5f5 100%)', padding: '20px', borderRadius: '16px', boxShadow: '0 4px 12px rgba(33,150,243,0.3)', color: '#fff' }}>
+                        <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>✓</span>
+                            <span>Asistencia</span>
+                        </div>
+                        <div style={{ fontSize: '36px', fontWeight: 'bold' }}>
+                            {alumno.promedio_gral_asistencia?.toFixed(1) || 'N/A'}%
+                        </div>
+                        <div style={{ fontSize: '12px', marginTop: '8px', opacity: 0.8 }}>
+                            {alumno.promedio_gral_asistencia >= 90 ? 'Muy constante' : alumno.promedio_gral_asistencia >= 80 ? 'Buena asistencia' : 'Mejora tu asistencia'}
+                        </div>
+                    </div>
+
+                    <div style={{ background: 'linear-gradient(135deg, #ff9800 0%, #ffa726 100%)', padding: '20px', borderRadius: '16px', boxShadow: '0 4px 12px rgba(255,152,0,0.3)', color: '#fff' }}>
+                        <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>⭐</span>
+                            <span>Conducta</span>
+                        </div>
+                        <div style={{ fontSize: '36px', fontWeight: 'bold' }}>
                             {alumno.promedio_gral_conducta?.toFixed(1) || 'N/A'}
+                        </div>
+                        <div style={{ fontSize: '12px', marginTop: '8px', opacity: 0.8 }}>
+                            {alumno.promedio_gral_conducta >= 85 ? 'Ejemplar' : alumno.promedio_gral_conducta >= 70 ? 'Adecuada' : 'Necesita mejorar'}
                         </div>
                     </div>
                 </div>
