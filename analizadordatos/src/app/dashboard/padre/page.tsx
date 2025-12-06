@@ -139,20 +139,37 @@ function PadreViewContent() {
 
                 <div style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                     <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: colorPalette.primary1, marginBottom: '16px' }}>
-                        Recomendaciones
+                        Recomendaciones para Padres/Tutores
                     </h2>
-                    <div style={{ fontSize: '16px', color: '#666', lineHeight: '1.6' }}>
+                    <div style={{ fontSize: '16px', color: '#666', lineHeight: '1.8' }}>
                         {alumno.probabilidad_riesgo !== undefined && alumno.probabilidad_riesgo > 0.5 && (
-                            <div style={{ padding: '12px', backgroundColor: '#fff3cd', borderLeft: '4px solid #ffc107', marginBottom: '12px' }}>
+                            <div style={{ padding: '16px', backgroundColor: '#fff3cd', borderLeft: '4px solid #ffc107', marginBottom: '16px', borderRadius: '8px' }}>
                                 <strong>⚠️ Atención requerida:</strong> El estudiante presenta probabilidad alta de riesgo académico. 
-                                Se recomienda programar una reunión con el docente.
+                                Se recomienda programar una reunión con el docente lo antes posible.
                             </div>
                         )}
                         {alumno.area_de_progreso !== undefined && (
-                            <p>Área de progreso actual: {(alumno.area_de_progreso * 100).toFixed(1)}%</p>
+                            <p style={{ marginBottom: '16px' }}>Área de progreso actual: <strong>{(alumno.area_de_progreso * 100).toFixed(1)}%</strong></p>
                         )}
-                        <p style={{ marginTop: '12px' }}>
-                            Mantenga comunicación constante con el docente para dar seguimiento al desempeño académico.
+                        
+                        <div style={{ marginTop: '20px', padding: '16px', backgroundColor: '#fff3e0', borderRadius: '8px' }}>
+                            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: colorPalette.primary4, marginBottom: '12px' }}>💡 Recomendaciones para Apoyar en Casa</h3>
+                            <ul style={{ paddingLeft: '20px', marginTop: '8px', lineHeight: '1.8' }}>
+                                <li>Establecer una rutina diaria de estudio (horario fijo)</li>
+                                <li>Crear un espacio tranquilo y adecuado para hacer tareas</li>
+                                <li>Revisar diariamente los apuntes y tareas del estudiante</li>
+                                <li>Mantener comunicación constante con el docente</li>
+                                <li>Fomentar hábitos de lectura y organización</li>
+                                <li>Limitar distracciones (teléfono, TV) durante horarios de estudio</li>
+                                <li>Reconocer y celebrar logros académicos, por pequeños que sean</li>
+                                {alumno.probabilidad_riesgo > 0.5 && (
+                                    <li style={{ color: '#d32f2f', fontWeight: 'bold' }}>⚠️ Solicitar tutoría adicional o apoyo pedagógico</li>
+                                )}
+                            </ul>
+                        </div>
+                        
+                        <p style={{ marginTop: '16px', fontStyle: 'italic', color: '#666' }}>
+                            Recuerde: Su apoyo y seguimiento son fundamentales para el éxito académico de su hijo/a.
                         </p>
                     </div>
                 </div>

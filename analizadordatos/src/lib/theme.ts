@@ -8,6 +8,8 @@ export const colorPalette = {
   primary4: '#454F59',      // Gris oscuro (#454F59)
   dark: '#2C3033',          // Negro oscuro (#2C3033)
   accent: '#242C33',        // Gris muy oscuro (#242C33)
+  secondary1: '#10B981',    // Verde para docente
+  accent1: '#F59E0B',       // Naranja para énfasis
 };
 
 export const theme = createTheme({

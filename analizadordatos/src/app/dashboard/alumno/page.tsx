@@ -121,15 +121,28 @@ function AlumnoViewContent() {
                     <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: colorPalette.primary1, marginBottom: '16px' }}>
                         Áreas de Oportunidad
                     </h2>
-                    <div style={{ fontSize: '16px', color: '#666' }}>
+                    <div style={{ fontSize: '16px', color: '#666', lineHeight: '1.8' }}>
                         {alumno.area_de_progreso !== undefined && (
-                            <p>Área de progreso: {(alumno.area_de_progreso * 100).toFixed(1)}%</p>
+                            <p style={{ marginBottom: '12px' }}>Área de progreso: <strong>{(alumno.area_de_progreso * 100).toFixed(1)}%</strong></p>
                         )}
                         {alumno.probabilidad_riesgo !== undefined && (
-                            <p style={{ color: alumno.probabilidad_riesgo > 0.5 ? '#ff6b6b' : '#51cf66' }}>
-                                Probabilidad de riesgo: {(alumno.probabilidad_riesgo * 100).toFixed(1)}%
+                            <p style={{ color: alumno.probabilidad_riesgo > 0.5 ? '#ff6b6b' : '#51cf66', marginBottom: '16px' }}>
+                                Probabilidad de riesgo: <strong>{(alumno.probabilidad_riesgo * 100).toFixed(1)}%</strong>
                             </p>
                         )}
+                        
+                        <div style={{ marginTop: '20px', padding: '16px', backgroundColor: '#e3f2fd', borderRadius: '8px' }}>
+                            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: colorPalette.primary4, marginBottom: '12px' }}>💡 Recomendaciones Personales</h3>
+                            <ul style={{ paddingLeft: '20px', marginTop: '8px', lineHeight: '1.8' }}>
+                                <li>Mantén un horario de estudio consistente</li>
+                                <li>Solicita apoyo en las materias que presenten mayor dificultad</li>
+                                <li>Participa activamente en clase y resuelve tus dudas</li>
+                                <li>Revisa tus apuntes diariamente</li>
+                                {alumno.probabilidad_riesgo > 0.5 && (
+                                    <li style={{ color: '#d32f2f', fontWeight: 'bold' }}>⚠️ Busca tutoría adicional lo antes posible</li>
+                                )}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

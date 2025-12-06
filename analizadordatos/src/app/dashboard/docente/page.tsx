@@ -166,24 +166,42 @@ function DocenteViewContent() {
                     </h2>
                     <div style={{ fontSize: '16px', color: '#666', lineHeight: '1.8' }}>
                         {alumno.probabilidad_riesgo !== undefined && alumno.probabilidad_riesgo > 0.5 && (
-                            <div style={{ padding: '16px', backgroundColor: '#fff3cd', borderLeft: '4px solid #ffc107', marginBottom: '16px' }}>
+                            <div style={{ padding: '16px', backgroundColor: '#fff3cd', borderLeft: '4px solid #ffc107', marginBottom: '16px', borderRadius: '8px' }}>
                                 <strong>⚠️ Alerta:</strong> Este estudiante presenta alta probabilidad de riesgo académico ({(alumno.probabilidad_riesgo * 100).toFixed(1)}%). 
                                 Se recomienda intervención personalizada y seguimiento cercano.
                             </div>
                         )}
                         
-                        <div style={{ marginBottom: '12px' }}>
-                            <strong>Área de progreso:</strong> {alumno.area_de_progreso !== undefined ? `${(alumno.area_de_progreso * 100).toFixed(1)}%` : 'N/A'}
+                        <div style={{ marginBottom: '16px', padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>
+                            <strong>Métricas Clave:</strong>
+                            <p style={{ marginTop: '8px' }}>Área de progreso: <strong>{alumno.area_de_progreso !== undefined ? `${(alumno.area_de_progreso * 100).toFixed(1)}%` : 'N/A'}</strong></p>
+                            <p>Promedio general: <strong>{alumno.promedio_gral_calificacion?.toFixed(1)}</strong></p>
+                            <p>Asistencia: <strong>{alumno.promedio_gral_asistencia?.toFixed(1)}%</strong></p>
                         </div>
 
                         <div style={{ padding: '16px', backgroundColor: '#e3f2fd', borderRadius: '8px', marginTop: '16px' }}>
-                            <strong>💡 Sugerencias:</strong>
-                            <ul style={{ marginTop: '8px', paddingLeft: '20px' }}>
-                                <li>Identificar materias con bajo rendimiento para refuerzo</li>
-                                <li>Considerar estrategias de aprendizaje personalizado</li>
-                                <li>Mantener comunicación con los padres/tutores</li>
-                                <li>Monitorear asistencia y participación en clase</li>
+                            <strong>💡 Estrategias Pedagógicas Recomendadas:</strong>
+                            <ul style={{ marginTop: '12px', paddingLeft: '20px', lineHeight: '1.8' }}>
+                                <li>Identificar materias con bajo rendimiento para refuerzo específico</li>
+                                <li>Implementar estrategias de aprendizaje personalizado</li>
+                                <li>Realizar evaluaciones formativas frecuentes</li>
+                                <li>Fomentar la participación activa en clase</li>
+                                <li>Ofrecer retroalimentación constructiva y oportuna</li>
+                                <li>Mantener comunicación constante con los padres/tutores</li>
+                                <li>Monitorear asistencia y puntualidad</li>
+                                <li>Considerar trabajo en grupos pequeños para apoyo entre pares</li>
+                                {alumno.probabilidad_riesgo > 0.5 && (
+                                    <>
+                                        <li style={{ color: '#d32f2f', fontWeight: 'bold' }}>⚠️ Implementar plan de intervención inmediato</li>
+                                        <li style={{ color: '#d32f2f', fontWeight: 'bold' }}>⚠️ Coordinar tutorías adicionales</li>
+                                        <li style={{ color: '#d32f2f', fontWeight: 'bold' }}>⚠️ Notificar a coordinación académica</li>
+                                    </>
+                                )}
                             </ul>
+                        </div>
+                        
+                        <div style={{ marginTop: '16px', padding: '12px', backgroundColor: '#f0f9ff', borderRadius: '8px', borderLeft: '3px solid #3b82f6' }}>
+                            <strong>Nota:</strong> Se sugiere documentar todas las intervenciones realizadas y evaluar su efectividad periódicamente.
                         </div>
                     </div>
                 </div>
