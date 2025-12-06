@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  // Solo exportar estático en Azure, Vercel soporta dinámico
+  ...(process.env.VERCEL ? {} : { output: 'export' }),
   typescript: {
     ignoreBuildErrors: true,
   },
